@@ -8,15 +8,33 @@ from ezdxf.addons.drawing import matplotlib as rendu
 
 from .modele import Dessin
 
+# motif du modèle : (motif DXF, échelle)
+MOTIFS = {"MACONNERIE": ("ANSI31", 20), "BETON": ("AR-CONC", 1), "ISOLANT": ("ANSI37", 20)}
+
 # nom : (couleur ACI, type de ligne)
 CALQUES = {
     "CONTOUR": (7, "Continuous"),
     "AXE": (1, "DASHDOT"),
     "CACHE": (3, "DASHED"),
     "DETAIL": (8, "Continuous"),
+    "HACHURES": (8, "Continuous"),
     "COTES": (4, "Continuous"),
     "TEXTES": (7, "Continuous"),
 }
+
+
+def _etendue(dessin: Dessin) -> float:
+    """Plus grande dimension du dessin, pour dimensionner le texte des cotes."""
+    xs, ys = [], []
+    for l in dessin.lignes:
+        xs += [l.x1, l.x2]
+        ys += [l.y1, l.y2]
+    for p in dessin.polylignes:
+        xs += [pt.x for pt in p.points]
+        ys += [pt.y for pt in p.points]
+    if not xs:
+        return 0.0
+    return max(max(xs) - min(xs), max(ys) - min(ys))
 
 
 def construire(dessin: Dessin) -> ezdxf.document.Drawing:
@@ -27,6 +45,7 @@ def construire(dessin: Dessin) -> ezdxf.document.Drawing:
         doc.layers.add(nom, color=couleur, linetype=type_ligne)
 
     msp = doc.modelspace()
+    hauteur_cote = max(80.0, _etendue(dessin) / 60)
 
     for l in dessin.lignes:
         msp.add_line((l.x1, l.y1), (l.x2, l.y2), dxfattribs={"layer": l.calque})
@@ -48,10 +67,17 @@ def construire(dessin: Dessin) -> ezdxf.document.Drawing:
             dimstyle="EZDXF",
             override={
                 "dimlfac": 1, "dimdec": 0,
-                "dimtxt": 80, "dimasz": 60, "dimexe": 30, "dimexo": 30,
+                "dimtxt": hauteur_cote, "dimasz": hauteur_cote * 0.75,
+                "dimexe": hauteur_cote * 0.4, "dimexo": hauteur_cote * 0.4,
             },
             dxfattribs={"layer": "COTES"},
         ).render()
+
+    for h in dessin.hachures:
+        motif, echelle = MOTIFS[h.motif]
+        hachure = msp.add_hatch(dxfattribs={"layer": "HACHURES"})
+        hachure.set_pattern_fill(motif, scale=echelle)
+        hachure.paths.add_polyline_path([(pt.x, pt.y) for pt in h.contour], is_closed=True)
 
     for t in dessin.textes:
         msp.add_text(

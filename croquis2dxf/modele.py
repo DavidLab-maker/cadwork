@@ -50,6 +50,13 @@ class Cote(BaseModel):
     decalage: float = Field(description="Distance de la ligne de cote à l'élément, en mm")
 
 
+class Hachure(BaseModel):
+    """Zone hachurée (maçonnerie, béton…) délimitée par un contour fermé."""
+
+    contour: List[Point]
+    motif: Literal["MACONNERIE", "BETON", "ISOLANT"]
+
+
 class Texte(BaseModel):
     x: float
     y: float
@@ -64,6 +71,7 @@ class Dessin(BaseModel):
     polylignes: List[Polyligne]
     cercles: List[Cercle]
     cotes: List[Cote]
+    hachures: List[Hachure]
     textes: List[Texte]
     incertitudes: List[str] = Field(
         description="Tout ce qui est illisible, ambigu ou supposé : à vérifier par l'humain"

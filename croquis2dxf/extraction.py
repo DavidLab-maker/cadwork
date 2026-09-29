@@ -29,7 +29,15 @@ et signale l'hypothèse dans `incertitudes`.
 et écris-le explicitement dans `incertitudes` (quel élément, quelle valeur supposée, pourquoi).
 - Calques : CONTOUR pour les traits vus, AXE pour les axes/entraxes (traits mixtes), \
 CACHE pour les traits cachés (pointillés), DETAIL pour le reste (hachures, repères).
-- Pièces rectangulaires (solives, poutres, montants) : polyligne fermée.
+- Pièces rectangulaires (solives, poutres, montants) : polyligne fermée, largeur = section vue en plan.
+- Une flèche annotée « solive 10x30 entraxe 50 » indique le sens de portée d'un solivage : \
+dessine CHAQUE solive individuellement sur toute la zone, à l'entraxe indiqué. \
+Position de la première solive : 25 cm de l'appui si rien n'est indiqué (le signaler).
+- Les couleurs du croquis distinguent souvent les éléments (ex. poutre en vert, solives en rouge).
+- Zones hachurées (murs maçonnés, béton) : un `Hachure` par zone rectangulaire, \
+plus les polylignes de contour sur le calque CONTOUR.
+- Longueurs d'appui des poutres et solives dans les murs : si non cotées, suppose-les et signale-le.
+- Une cote sans unité sur un croquis où d'autres cotes sont en cm est probablement en cm.
 - Chaque cote du croquis donne une `Cote` : points mesurés, `valeur_lue` en mm, \
 `texte_lu` exactement comme écrit, `decalage` ≈ 300 mm.
 - Textes et annotations (sections, essences, repères) : `Texte` avec hauteur ≈ 100 mm.

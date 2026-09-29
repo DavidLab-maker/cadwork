@@ -253,5 +253,6 @@
   "incertitudes": [
     "Entraxe écrit « 50 » interprété comme 50 cm = 500 mm",
     "Épaisseur des lisses non cotée : 200 mm supposés"
-  ]
+  ],
+  "hachures": []
 }

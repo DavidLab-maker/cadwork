@@ -45,3 +45,13 @@ def test_cli_refuse_si_incoherence(tmp_path):
     assert not chemin.with_suffix(".dxf").exists()
     assert main(["dxf", str(chemin), "--forcer"]) == 0
     assert chemin.with_suffix(".dxf").exists()
+
+
+def test_croquis_reel_plancher_poutre(tmp_path):
+    chemin = EXEMPLE.with_name("plancher_poutre_LC.json")
+    dessin = Dessin.model_validate_json(chemin.read_text(encoding="utf-8"))
+    assert verifier(dessin) == []
+    ecrire_dxf(dessin, tmp_path / "p.dxf")
+    msp = ezdxf.readfile(tmp_path / "p.dxf").modelspace()
+    assert len(msp.query("HATCH")) == 4  # 4 murs maçonnés
+    assert len(msp.query("LWPOLYLINE")) == 4 + 1 + 32  # murs, poutre, 2 x 16 solives
