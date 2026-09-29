@@ -1,0 +1,6 @@
+anthropic>=1.9
+ezdxf>=1.4
+pydantic>=2.13
+matplotlib>=3.11
+pillow
+pytest
