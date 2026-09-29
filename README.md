@@ -7,6 +7,9 @@ en géométrie cotée (JSON), contrôlé, puis converti en DXF à importer dans 
 croquis.jpg ──lire──▶ croquis.json + croquis_apercu.png ──(relecture humaine)──▶ dxf ──▶ croquis.dxf
 ```
 
+**Débutant ? Suis le [guide pas à pas](GUIDE_DEBUTANT.md)** (installation par
+double-clic, croquis par glisser-déposer).
+
 > **La relecture n'est pas optionnelle.** Un chiffre manuscrit mal lu donne une
 > géométrie fausse mais propre. L'outil fait gagner le temps de saisie, pas la
 > vérification.
